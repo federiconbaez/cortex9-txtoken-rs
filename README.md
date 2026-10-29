@@ -50,6 +50,18 @@ Modos de ataque (`chain::Tamper`): `tctx_value`, `tctx_add_field`, `sub_swap`, `
 
 `cargo test`: 12 tests de integración en `tests/spec.rs`, ninguno ignorado. El CI (`.github/workflows/ci.yml`) corre `fmt --check`, `clippy -D warnings`, los tests y el benchmark con `--check`, que sale con 1 si no se cumple M4 = 0, M5 = 100 %, C+ = 100 % o C− ≥ 7 modos.
 
+### Qué prueba y qué no el 9000/9000
+
+- **Prueba**: en un solo proceso, el verificador del salto siguiente rechazó los 9 tipos de alteración prerregistrados (`tctx_value`, `tctx_add_field`, `sub_swap`, `scope_escalate`, `resign_foreign_key`, `alg_none`, `splice_signature`, `duplicate_header`, `cross_domain`), 1000 veces cada uno, y aceptó las 5000 cadenas sin alterar. El control negativo (un verificador sin chequeo de firma, que se deja engañar por los 7 modos que solo atacan la firma) muestra que el arnés detecta un verificador roto.
+- **No prueba**:
+  - resistencia a alteraciones fuera de esos 9 tipos;
+  - qué pasa si se compromete la clave del TTS o de un workload: con la clave, un atacante firma tokens válidos y el verificador los acepta;
+  - protección contra el replay de un token válido dentro de su vida (no hay caché por `txn`, §13.2);
+  - confusión de algoritmos con otras claves (solo EdDSA);
+  - el comportamiento con HTTP y red reales;
+  - la interoperabilidad con otras implementaciones.
+- **El corpus es nuestro**: los ataques y las cadenas salen del mismo código y de nuestra lectura del draft. Un 100 % sobre un corpus propio indica consistencia con esa lectura, no ausencia de errores.
+
 ### Nivel de verificación
 
 - **A**: compila, `clippy -D warnings` limpio, 12/12 tests.
@@ -89,6 +101,18 @@ Pre-registered in `PREREGISTRO.md`. Command: `cargo run --release --bin txtoken-
 - Per-hop validation p50 39–40 µs, p99 70–122 µs; forward-only baseline 0.15 µs.
 - JWKS fetches during the chain after warm-up: 0.
 - Tampered tokens rejected at the next hop: 9000/9000. Positive control 5000/5000 accepted. Negative control (no signature check) fooled by the 7 signature-only modes 1000/1000 each.
+
+### What 9000/9000 proves and what it doesn't
+
+- **It proves** that, in a single process, the next-hop verifier rejected the 9 pre-registered tamper types, 1000 times each, and accepted all 5000 untampered chains. The negative control (a verifier without the signature check, which is fooled by the 7 signature-only modes) shows that the harness catches a broken verifier.
+- **It doesn't cover**:
+  - alterations outside those 9 types;
+  - compromise of the TTS or workload key: a key holder mints valid tokens, and they are accepted;
+  - replay of a valid token within its lifetime (no `txn` cache, §13.2);
+  - algorithm confusion (EdDSA only);
+  - real HTTP or network;
+  - interoperability.
+- **The corpus is ours**: the attacks and chains come from our own code and our reading of the draft. 100 % on our own corpus shows consistency with that reading, not absence of bugs.
 
 ### Verification level
 
