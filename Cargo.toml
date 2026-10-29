@@ -1,0 +1,20 @@
+[package]
+name = "txtoken"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.82"
+license = "Apache-2.0"
+description = "Transaction Tokens (draft-ietf-oauth-transaction-tokens-11): Txn-Token Service, offline verification and a 5-hop propagation benchmark"
+publish = false
+
+[dependencies]
+base64 = "0.22"
+ed25519-dalek = { version = "2.2", features = ["rand_core"] }
+form_urlencoded = "1.2"
+rand = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = { version = "1", features = ["v4"] }
+
+[profile.release]
+debug = false
