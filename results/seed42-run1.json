@@ -1,0 +1,57 @@
+{
+  "C_neg_insecure_fooled": {
+    "per_mode": {
+      "alg_none": 1000,
+      "cross_domain": 0,
+      "duplicate_header": 0,
+      "resign_foreign_key": 1000,
+      "scope_escalate": 1000,
+      "splice_signature": 1000,
+      "sub_swap": 1000,
+      "tctx_add_field": 1000,
+      "tctx_value": 1000
+    },
+    "per_mode_of": 1000
+  },
+  "C_pos_accepted_all_5_hops": {
+    "accepted": 5000,
+    "total": 5000
+  },
+  "M1_bytes": {
+    "access_token_in": 354,
+    "txn_token": 651
+  },
+  "M2_issue_us": {
+    "p50": 60.217,
+    "p99": 114.534
+  },
+  "M3_hop_us": {
+    "added_p50": 39.552,
+    "forward_only_p50": 0.144,
+    "verify_p50": 39.696,
+    "verify_p99": 69.937
+  },
+  "M4_jwks_fetches_during_chain": 0,
+  "M5_rejected_at_next_hop": {
+    "per_mode": {
+      "alg_none": 1000,
+      "cross_domain": 1000,
+      "duplicate_header": 1000,
+      "resign_foreign_key": 1000,
+      "scope_escalate": 1000,
+      "splice_signature": 1000,
+      "sub_swap": 1000,
+      "tctx_add_field": 1000,
+      "tctx_value": 1000
+    },
+    "rejected": 9000,
+    "total": 9000
+  },
+  "jwks_fetches_total_incl_tamper": 1,
+  "params": {
+    "hops": 5,
+    "seed": 42,
+    "tamper_n": 1000,
+    "tx": 5000
+  }
+}

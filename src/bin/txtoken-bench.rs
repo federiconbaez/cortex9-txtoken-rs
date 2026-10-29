@@ -118,8 +118,22 @@ fn main() {
         "M4_jwks_fetches_during_chain": fetches_chain,
         "M5_rejected_at_next_hop": {"total": m5_total, "rejected": m5_rejected_next, "per_mode": m5},
         "C_pos_accepted_all_5_hops": {"total": tx, "accepted": accepted_all},
-        "C_neg_insecure_fooled": {"per_mode_of": tamper_n, "per_mode": cneg},
+        "C_neg_insecure_fooled": {"per_mode_of": tamper_n, "per_mode": cneg.clone()},
         "jwks_fetches_total_incl_tamper": f.verifier.jwks.fetches(),
     });
     println!("{}", serde_json::to_string_pretty(&report).expect("json"));
+
+    if std::env::args().any(|a| a == "--check") {
+        let neg_ok = cneg
+            .iter()
+            .filter(|(_, v)| v.as_u64() == Some(tamper_n))
+            .count()
+            >= 7;
+        let ok = fetches_chain == 0 && m5_rejected_next == m5_total && accepted_all == tx && neg_ok;
+        if !ok {
+            eprintln!("pre-registered criteria NOT met");
+            std::process::exit(1);
+        }
+        eprintln!("pre-registered criteria met: M4=0, M5=100%, C+=100%, C- fooled>=7 modes");
+    }
 }
